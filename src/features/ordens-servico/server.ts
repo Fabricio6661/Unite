@@ -12,6 +12,7 @@ import { z } from 'zod'
 import { uploadFileToStorage, deleteFileFromStorage } from '@/lib/supabase-storage'
 import { requireTecnicoOrAdmin } from '@/lib/auth-server'
 import { getEstoqueUnidadeLabel } from '@/lib/utils'
+import { gerarNumeroOs } from './numero-os'
 
 export const getOrdensServico = createServerFn({ method: 'GET' }).handler(
   async () => {
@@ -156,11 +157,7 @@ export const createOrdemServico = createServerFn({ method: 'POST' })
     const [novaOs] = await db
       .insert(ordensServico)
       .values({
-        numero: `OS${new Date().getFullYear()}${Math.floor(
-          Math.random() * 10000,
-        )
-          .toString()
-          .padStart(4, '0')}`,
+        numero: gerarNumeroOs(),
         clienteId: data.clienteId,
         tipoServico: data.tipoServico,
         descricaoProblema: data.descricaoProblema,
